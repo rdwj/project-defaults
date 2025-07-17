@@ -1,4 +1,5 @@
 # Global Cursor Rules - Project Defaults
+# Be sure to read each of these and customize them to your use case.
 
 ## Environment & Platform
 - Use Podman, NOT Docker
