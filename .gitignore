@@ -1,0 +1,4 @@
+# Note that there is a .cursorrules file in the root directory.
+# It is used to tell Cursor what to do.
+# Do not gitignore the .cursorrules file. 
+# It is the most important file in the project.

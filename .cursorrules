@@ -1,0 +1,86 @@
+# Global Cursor Rules - Project Defaults
+
+## Environment & Platform
+- Use Podman, NOT Docker
+- Use `Containerfile`, NOT `Dockerfile`
+- Use `podman-compose.yml` for local orchestration
+- Target deployment: Red Hat OpenShift with OpenShift AI features
+- Always use Red Hat UBI base images (registry.redhat.io/ubi9/*)
+
+## Python Development
+- ALWAYS use venv for local development
+- Never install packages globally
+- For package versions: search PyPI or let pip resolve (don't use training data versions)
+- Preferred web framework: FastAPI
+- MCP implementation: FastMCP v2
+
+## Architecture Principles
+- Prefer loose coupling via APIs
+- Use MCP servers for AI capabilities
+- Real-time: SSE for REST, streamable-http for MCP
+- Avoid gRPC unless specifically requested
+- No early optimization - get basic functionality working first
+
+## AI/ML Stack
+- Agent frameworks: LangChain/LangGraph or Meta LlamaStack
+- Embedding models: Must be vLLM-compatible
+- Document processing: Use Docling
+- Model types:
+  - Local SLMs for sensitive data
+  - OpenShift AI Models for enterprise
+  - Public Cloud Hosted only for non-sensitive tasks and with explicit approval
+
+## AI/ML Development
+- KubeFlow pipelines for data flows and model development
+- OpenShift AI workbenches for experimentation
+
+## Database Choices
+- Relational: PostgreSQL
+- Document: MongoDB
+- Graph: Neo4j
+- Vector: PGVector (if using PostgreSQL), Milvus, or Weaviate
+- Cache: Redis
+
+## Security & Compliance
+- FIPS compliance may be required - ask if unclear
+- Use FIPS-enabled UBI images when needed
+- OAuth2/OIDC via OpenShift for auth
+- Secrets: OpenShift Secrets or HashiCorp Vault
+
+## Development Practices
+- NEVER mock functionality to work around errors
+- Let broken things stay visibly broken
+- Only mock when explicitly requested
+- Focus on working code over perfect architecture
+- Create explicit error messages that help debugging
+
+## Project Structure
+```
+project-root/
+├── Containerfile
+├── podman-compose.yml
+├── manifests/
+│   ├── base/
+│   └── overlays/
+├── src/
+├── mcp-servers/
+├── agents/
+└── tests/
+```
+
+## Deployment
+- GitOps with ArgoCD when appropriate
+- OpenShift Pipelines (Tekton) for CI/CD
+- Use OpenShift built-in monitoring
+
+## Quick Reminders
+- Check if FIPS is needed before starting
+- Use venv before any Python work
+- Search for latest package versions
+- Red Hat UBI base images only
+- FastAPI > Flask for new projects
+- Docling for document processing
+- vLLM-compatible embeddings only
+
+## Creating Directories
+- If you are creating directories for a project structure, create a shell script to do the directory creation and then run the script.
