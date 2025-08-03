@@ -1,0 +1,24 @@
+FROM registry.redhat.io/ubi9/python-311:latest
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY pyproject.toml ./
+RUN pip install --no-cache-dir .
+
+# Copy source code
+COPY src/ ./src/
+COPY prompts/ ./prompts/
+
+# Install the package
+RUN pip install --no-cache-dir -e .
+
+# Create non-root user
+USER 1001
+
+# Expose port for HTTP/SSE modes
+EXPOSE 8000
+
+# Default to stdio transport
+CMD ["yaml-prompt-mcp", "--transport", "stdio"]

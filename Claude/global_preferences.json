@@ -1,0 +1,157 @@
+{
+  "environment_platform": {
+    "container_runtime": "Podman (NOT Docker)",
+    "container_file": "Containerfile (NOT Dockerfile)",
+    "orchestration": "podman-compose.yml for local development",
+    "deployment_target": "Red Hat OpenShift with OpenShift AI features",
+    "base_images": "Always use Red Hat UBI base images (registry.redhat.io/ubi9/*)",
+    "fips_compliance": "May be required - ask if unclear, use FIPS-enabled UBI images when needed"
+  },
+  
+  "python_development": {
+    "environment_management": "ALWAYS use venv for local development",
+    "package_installation": "Never install packages globally",
+    "package_versions": "Search PyPI or let pip resolve (don't use training data versions)",
+    "web_framework": "FastAPI (preferred over Flask for new projects)",
+    "mcp_implementation": "FastMCP v2"
+  },
+  
+  "architecture_principles": {
+    "coupling": "Prefer loose coupling via APIs",
+    "ai_capabilities": "Use MCP servers for AI capabilities",
+    "real_time": "streamable-http for MCP (SSE is deprecated), standard HTTP for REST APIs",
+    "protocols": "Avoid gRPC unless specifically requested",
+    "optimization": "No early optimization - get basic functionality working first"
+  },
+  
+  "mcp_transport_protocols": {
+    "mcp_servers": {
+      "stdio": "Best for local tools and command-line scripts (default)",
+      "http_streamable": "Recommended for web deployments and production (SSE is deprecated)"
+    },
+    "regular_apis": "Standard HTTP/REST for web services"
+  },
+  
+  "ai_ml_stack": {
+    "agent_frameworks": "LangChain/LangGraph or Meta LlamaStack",
+    "embedding_models": "Must be vLLM-compatible",
+    "document_processing": "Use Docling",
+    "model_deployment": {
+      "local_slm": "For sensitive data",
+      "openshift_ai": "For enterprise use",
+      "public_cloud": "Only for non-sensitive tasks with explicit approval"
+    },
+    "development_platform": "KubeFlow pipelines for data flows and model development",
+    "experimentation": "OpenShift AI workbenches"
+  },
+  
+  "database_choices": {
+    "relational": "PostgreSQL",
+    "document": "MongoDB", 
+    "graph": "Neo4j",
+    "vector": "PGVector (if using PostgreSQL), Milvus, or Weaviate",
+    "cache": "Redis"
+  },
+  
+  "security_compliance": {
+    "authentication": "OAuth2/OIDC via OpenShift",
+    "secrets_management": "OpenShift Secrets or HashiCorp Vault",
+    "fips_note": "Check if FIPS compliance is needed before starting"
+  },
+  
+  "development_practices": {
+    "error_handling": "NEVER mock functionality to work around errors",
+    "debugging": "Let broken things stay visibly broken",
+    "mocking": "Only mock when explicitly requested",
+    "architecture_vs_functionality": "Focus on working code over perfect architecture",
+    "error_messages": "Create explicit error messages that help debugging"
+  },
+  
+  "project_structure": {
+    "standard_layout": [
+      "project-root/",
+      "├── Containerfile",
+      "├── podman-compose.yml", 
+      "├── manifests/",
+      "│   ├── base/",
+      "│   └── overlays/",
+      "├── src/",
+      "├── prompts/",
+      "├── mcp-servers/",
+      "├── agents/",
+      "└── tests/"
+    ],
+    "directory_creation": "Create shell script for directory creation and then run the script"
+  },
+  
+  "prompt_management": {
+    "format": "YAML files for easy editing and developer briefing",
+    "directory": "prompts/ (peer with src/)",
+    "structure": {
+      "required_fields": [
+        "name: Human-readable prompt name",
+        "description: Purpose and context of the prompt", 
+        "template: Prompt text with {variable_name} substitution"
+      ],
+      "optional_fields": [
+        "parameters: LLM settings (temperature, max_tokens, etc.)",
+        "variables: Input definitions with type, description, required flag"
+      ]
+    },
+    "variable_substitution": "Use {variable_name} format in template",
+    "response_schemas": "Maintain separate JSON schema files when structured output is needed",
+    "rationale": "Keep prompts easily editable rather than baking into MCP servers",
+    "developer_onboarding": "YAML format makes it easy to brief other developers on prompt functionality"
+  },
+  
+  "deployment": {
+    "gitops": "ArgoCD when appropriate",
+    "ci_cd": "OpenShift Pipelines (Tekton)",
+    "monitoring": "OpenShift built-in monitoring"
+  },
+  
+  "mcp_publishing_strategy": {
+    "package_distribution": {
+      "python_package": "Use pyproject.toml with proper entry points for CLI tools",
+      "internal_pypi": "Publish to internal PyPI for easy pip install across teams",
+      "git_templates": "Provide template repositories for teams to clone and customize"
+    },
+    "container_strategy": {
+      "base_images": "Red Hat UBI for all container builds",
+      "multi_stage": "Use multi-stage builds for production optimization",
+      "registry": "Push to OpenShift internal registry or enterprise container registry"
+    },
+    "openshift_deployment": {
+      "manifests": "Provide base manifests with Kustomize overlays for different environments",
+      "gitops": "Structure for ArgoCD deployment",
+      "monitoring": "Include ServiceMonitor for OpenShift monitoring stack"
+    },
+    "developer_experience": {
+      "cli_tools": "Provide command-line tools for easy server creation and management",
+      "documentation": "Include examples, API docs, and deployment guides",
+      "scaffolding": "Scripts to generate new MCP server projects with prompts"
+    }
+  },
+  
+  "quick_reminders": [
+    "Check if FIPS is needed before starting",
+    "Use venv before any Python work", 
+    "Search for latest package versions",
+    "Red Hat UBI base images only",
+    "FastAPI > Flask for new projects",
+    "Docling for document processing",
+    "vLLM-compatible embeddings only",
+    "Use streamable-http for MCP servers (SSE is deprecated)"
+  ],
+  
+  "claude_instructions": {
+    "preference_priority": "Always reference these preferences when providing code examples, architecture suggestions, or project setup guidance",
+    "version_checking": "When suggesting packages, search for current versions rather than using potentially outdated information",
+    "compliance_awareness": "Always ask about FIPS requirements and security constraints for enterprise environments",
+    "red_hat_focus": "Prioritize Red Hat ecosystem solutions and OpenShift-native approaches",
+    "practical_approach": "Focus on working solutions that follow these standards rather than theoretical perfection",
+    "mcp_publishing": "When discussing MCP server distribution, recommend the multi-layered approach with Python packages, containers, and OpenShift manifests",
+    "transport_protocols": "For MCP servers, recommend STDIO for local development and HTTP (streamable-http) for production deployments",
+    "error_handling": "Never hide errors or mock functionality to work around problems - make failures obvious and debuggable"
+  }
+}

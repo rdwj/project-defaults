@@ -85,3 +85,6 @@ project-root/
 
 ## Creating Directories
 - If you are creating directories for a project structure, create a shell script to do the directory creation and then run the script.
+
+## Git
+- Never perform `git add` or `git commit` operations - these are handled manually by the user

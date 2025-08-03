@@ -1,210 +1,137 @@
-# Chat Guide Templates
+# PROJECT_DEFAULTS
 
-## What Are Chat Guides?
+Enterprise development standards, templates, and configuration files for consistent software development practices across teams.
 
-Chat guides are structured markdown documents designed to break down complex software development projects into manageable, single-conversation tasks with AI assistants. Each guide represents a focused unit of work that can typically be completed in one chat session.
+## 📁 Repository Contents
 
-## Why Use Chat Guides?
+### 🤖 Claude AI Configuration (`/Claude`)
+Standardized configuration files for Claude AI to ensure consistent development practices:
+- **`CLAUDE.md`** - Comprehensive development guidelines for Claude Code (CLI tool)
+- **`global_preferences.json`** - Structured preferences for Claude Desktop/Web interface
+- **`README.md`** - Setup instructions and usage examples
 
-### 1. **Focused Scope**
-- Each guide targets a specific feature or component
-- Prevents context overflow in AI conversations
-- Clear start and end points for each session
+### 💬 Chat Guide Templates (`/chat_guides`)
+Structured markdown templates for breaking down complex software projects into manageable AI-assisted tasks:
+- **`CHAT-GUIDE-TEMPLATE.md`** - Master template for creating new chat guides
+- **`EXAMPLE-user-authentication.md`** - Example guide for implementing user authentication
+- **`Example-ARCHITECTURE.md`** - Architecture documentation template following enterprise standards
+- **`PROJECT-DEFAULTS.md`** - Core development standards reference
+- **`README.md`** - Guide to using chat guides effectively
 
-### 2. **Systematic Progress**
-- Checkbox-driven task tracking
-- Visual progress indicators
-- Clear prerequisites and dependencies
+### 🖱️ Cursor Configuration (`/Cursor`)
+- **`CURSOR-SETUP.md`** - Instructions for setting up global Cursor rules to match enterprise standards
 
-### 3. **Knowledge Transfer**
-- Documents implementation decisions
-- Captures troubleshooting solutions
-- Serves as onboarding material
+### 🔌 MCP Server Examples (`/mcp_servers`)
+Model Context Protocol server examples using FastMCP v2:
+- **`prompt_management_mcp/`** - YAML-based prompt management system
+  - `build_mcp_deployment.sh` - Build script for MCP deployment
+  - `prompt_management_mcp.py` - Core MCP server implementation
+  - `yaml-prompt-mcp/` - Full project structure with OpenShift deployment
 
-### 4. **Quality Assurance**
-- Built-in testing checklists
-- Success criteria definition
-- Consistent implementation standards
+## 🚀 Quick Start
 
-## How to Use Chat Guides
+### 1. Set Up Claude AI Standards
+```bash
+# For Claude Code (CLI)
+cp Claude/CLAUDE.md ~/CLAUDE.md
+# Or copy to your project root
+cp Claude/CLAUDE.md /path/to/your/project/
 
-### For Project Managers
-
-1. **Plan Your Project**
-   - Break down the project into logical phases
-   - Identify features that can be implemented independently
-   - Create a sequence of chat guides
-
-2. **Create Guide Files**
-   - Copy `CHAT-GUIDE-TEMPLATE.md`
-   - Fill in project-specific details
-   - Number guides sequentially (01-, 02-, etc.)
-
-3. **Track Progress**
-   - Monitor checkbox completion
-   - Review completed guides for quality
-   - Adjust future guides based on learnings
-
-### For Developers
-
-1. **Start a Chat Session**
-   - Open a new AI assistant conversation
-   - Share the relevant chat guide markdown
-   - Include any necessary context files
-
-2. **Work Through Tasks**
-   - Follow the guide systematically
-   - Check off completed items
-   - Document issues in troubleshooting section
-
-3. **Complete the Session**
-   - Verify all success criteria are met
-   - Update the guide status
-   - Note any follow-up actions
-
-## Template Structure
-
-### Core Sections
-
-1. **Overview**: High-level goal and expected outcome
-2. **Context**: Background and project integration
-3. **Prerequisites**: What must be ready before starting
-4. **Implementation Tasks**: Checkbox-driven task list
-5. **Technical Specifications**: Architecture, APIs, data models
-6. **Testing Checklist**: Verification steps
-7. **Success Criteria**: Definition of done
-8. **Troubleshooting**: Common issues and solutions
-
-### Best Practices
-
-#### Scope Definition
-- **Small**: 1-2 hours, single component (e.g., "Add user authentication endpoint")
-- **Medium**: 2-4 hours, integrated feature (e.g., "Implement payment processing")
-- **Large**: 4-6 hours, complex system (e.g., "Build analytics dashboard")
-
-#### Task Granularity
-- Each checkbox should be 5-30 minutes of work
-- Group related subtasks under major headings
-- Include both implementation and verification tasks
-
-#### Technical Details
-- Provide enough detail to guide implementation
-- Include API contracts and data schemas
-- Reference external documentation
-
-## Creating Effective Chat Guides
-
-### 1. Clear Objectives
-```markdown
-**Goal**: Implement user authentication with JWT tokens
-**Expected Outcome**: Secure login/logout endpoints with token refresh
+# For Claude Desktop
+# Upload Claude/global_preferences.json in your Claude session
 ```
 
-### 2. Specific Tasks
-```markdown
-### 1. Database Setup
-- [ ] Create users table with email, password_hash, created_at
-- [ ] Add indexes on email field
-- [ ] Create refresh_tokens table
+### 2. Use Chat Guide Templates
+```bash
+# Copy template to your project
+cp chat_guides/CHAT-GUIDE-TEMPLATE.md /path/to/project/01-feature-name.md
+# Customize for your specific feature
 ```
 
-### 3. Testable Criteria
-```markdown
-## Success Criteria
-- [ ] Users can register with email/password
-- [ ] Login returns JWT access token
-- [ ] Protected routes require valid token
-- [ ] Tokens expire and can be refreshed
+### 3. Configure Cursor IDE
+Follow the instructions in `Cursor/CURSOR-SETUP.md` to set up global rules.
+
+### 4. Deploy MCP Servers
+```bash
+cd mcp_servers/prompt_management_mcp/yaml-prompt-mcp
+./scripts/build.sh
+./scripts/deploy-openshift.sh prod my-namespace
 ```
 
-## Managing Guide Sequences
+## 📋 Key Standards
 
-### Project Structure
+### Container Platform
+- **Runtime**: Podman (NOT Docker)
+- **Files**: `Containerfile` (NOT Dockerfile)
+- **Base Images**: Red Hat UBI (`registry.redhat.io/ubi9/*`)
+- **Orchestration**: `podman-compose.yml`
+
+### Python Development
+- **Environment**: Always use `venv`
+- **Framework**: FastAPI preferred over Flask
+- **MCP**: FastMCP v2 with streamable-http transport
+- **Package Versions**: Search PyPI for current versions
+
+### Deployment
+- **Target**: Red Hat OpenShift
+- **GitOps**: ArgoCD
+- **CI/CD**: OpenShift Pipelines (Tekton)
+- **Monitoring**: OpenShift built-in
+
+### AI/ML Stack
+- **Agents**: LangChain/LangGraph
+- **Models**: vLLM-compatible
+- **Documents**: Docling
+- **Prompts**: YAML format in `prompts/` directory
+
+## 🏗️ Standard Project Structure
+
 ```
-swe-pm/
-├── README.md                    # Project overview
-├── 01-foundation-setup.md       # First guide
-├── 02-core-features.md          # Second guide
-├── 03-integrations.md          # Third guide
-└── templates/
-    ├── README.md               # This file
-    └── CHAT-GUIDE-TEMPLATE.md  # Template
+project-root/
+├── Containerfile          # Red Hat UBI base
+├── podman-compose.yml     # Local orchestration  
+├── manifests/             # OpenShift deployment
+│   ├── base/
+│   └── overlays/
+├── src/                   # Source code
+├── prompts/              # YAML prompt management
+├── mcp-servers/          # FastMCP servers
+├── agents/               # AI agents
+└── tests/                # Test suites
 ```
 
-### Dependency Management
-- Number guides to show sequence
-- List prerequisite guides in each document
-- Update main README with completion status
+## 🔒 Security & Compliance
 
-### Progress Tracking
-```markdown
-| Phase | Guides | Completed | In Progress | Not Started |
-|-------|--------|-----------|-------------|-------------|
-| Foundation | 3 | 2 | 1 | 0 |
-| Features | 5 | 0 | 0 | 5 |
-```
+- **FIPS Compliance**: May be required - always ask
+- **Authentication**: OAuth2/OIDC via OpenShift
+- **Secrets**: OpenShift Secrets or HashiCorp Vault
+- **Base Images**: FIPS-enabled UBI when needed
 
-## Tips for Success
+## 📚 Documentation
 
-### DO:
-- ✅ Keep guides focused on single features
-- ✅ Include all necessary context in the guide
-- ✅ Test as you implement
-- ✅ Update checkboxes in real-time
-- ✅ Document issues for future reference
+Each directory contains its own README with detailed information:
+- [Claude Configuration Guide](Claude/README.md)
+- [Chat Guides Tutorial](chat_guides/README.md)
+- [Cursor Setup Instructions](Cursor/CURSOR-SETUP.md)
 
-### DON'T:
-- ❌ Create guides longer than 6 hours of work
-- ❌ Skip prerequisites
-- ❌ Leave technical specs vague
-- ❌ Forget to define success criteria
-- ❌ Create separate completion tracking files
+## 🤝 Contributing
 
-## Example Use Cases
+1. Follow the standards defined in this repository
+2. Test changes in your local environment
+3. Update documentation as needed
+4. Submit pull requests with clear descriptions
 
-### 1. API Development
-- Authentication endpoints
-- CRUD operations
-- Third-party integrations
-- Webhook handlers
+## 📧 Support
 
-### 2. Frontend Features
-- Component libraries
-- Form implementations
-- Dashboard pages
-- Mobile responsiveness
+For questions about these standards or enterprise development practices:
+- **Maintainer**: Wes Jackson
+- **Last Updated**: 2025-08-03
+- **Version**: 1.0
 
-### 3. Infrastructure
-- Database migrations
-- CI/CD pipelines
-- Monitoring setup
-- Security hardening
+## 📄 License
 
-### 4. Data Processing
-- ETL pipelines
-- Analytics queries
-- Report generation
-- Data validation
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Maintenance
+---
 
-### Updating Guides
-- Modify guides directly (no versioning)
-- Check off completed tasks
-- Add troubleshooting entries as discovered
-- Update time estimates based on experience
-
-### Post-Completion
-- Review completed guides for insights
-- Extract common patterns for future guides
-- Update templates with learnings
-- Create reference documentation from guides
-
-## Getting Started
-
-1. Copy `CHAT-GUIDE-TEMPLATE.md` to your project
-2. Customize for your first feature
-3. Run through the guide with an AI assistant
-4. Iterate and improve the process
-
-Remember: The goal is to make complex projects manageable by breaking them into focused, well-documented conversations that produce working code.
+**Remember**: These standards ensure consistency, security, and maintainability across all enterprise projects. When in doubt, refer to the [PROJECT_DEFAULTS](chat_guides/PROJECT-DEFAULTS.md) document.

@@ -1,0 +1,20 @@
+name: "Example Prompt"
+description: "A simple example prompt for testing"
+template: |
+  Hello, {name}! 
+  
+  You are a helpful assistant. Please help with: {task}
+
+parameters:
+  - temperature: 0.7
+  - max_tokens: 1000
+
+variables:
+  - name: "name"
+    type: "string"
+    description: "Name of the user"
+    required: true
+  - name: "task"
+    type: "string" 
+    description: "Task to help with"
+    required: true

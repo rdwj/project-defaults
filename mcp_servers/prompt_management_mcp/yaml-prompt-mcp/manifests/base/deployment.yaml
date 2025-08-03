@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yaml-prompt-mcp
+  labels:
+    app: yaml-prompt-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yaml-prompt-mcp
+  template:
+    metadata:
+      labels:
+        app: yaml-prompt-mcp
+    spec:
+      containers:
+      - name: yaml-prompt-mcp
+        image: yaml-prompt-mcp:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: TRANSPORT
+          value: "http"
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "8000"
+        command: ["yaml-prompt-mcp"]
+        args: ["--transport", "$(TRANSPORT)", "--host", "$(HOST)", "--port", "$(PORT)"]
+        volumeMounts:
+        - name: prompts-volume
+          mountPath: /app/prompts
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: prompts-volume
+        configMap:
+          name: yaml-prompt-mcp-prompts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yaml-prompt-mcp-service
+spec:
+  selector:
+    app: yaml-prompt-mcp
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: ClusterIP
