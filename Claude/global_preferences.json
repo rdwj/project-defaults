@@ -5,6 +5,9 @@
     "orchestration": "podman-compose.yml for local development",
     "deployment_target": "Red Hat OpenShift with OpenShift AI features",
     "base_images": "Always use Red Hat UBI base images (registry.redhat.io/ubi9/*)",
+    "platform_architecture": "When building on Mac for OpenShift deployment, always specify --platform linux/amd64 to avoid ARM64/x86_64 architecture mismatches",
+    "build_command_example": "podman build --platform linux/amd64 -t myapp:latest -f Containerfile . --no-cache",
+    "build_strategy": "Prefer using OpenShift BuildConfig over building and pushing containers locally where possible",
     "fips_compliance": "May be required - ask if unclear, use FIPS-enabled UBI images when needed"
   },
   
@@ -141,7 +144,8 @@
     "FastAPI > Flask for new projects",
     "Docling for document processing",
     "vLLM-compatible embeddings only",
-    "Use streamable-http for MCP servers (SSE is deprecated)"
+    "Use streamable-http for MCP servers (SSE is deprecated)",
+    "Use --platform linux/amd64 when building containers on Mac for OpenShift"
   ],
   
   "claude_instructions": {

@@ -7,6 +7,11 @@
 - Use `podman-compose.yml` for local orchestration
 - Target deployment: Red Hat OpenShift with OpenShift AI features
 - Always use Red Hat UBI base images (registry.redhat.io/ubi9/*)
+- **Container Architecture**: When building on Mac for OpenShift deployment, always specify `--platform linux/amd64` to avoid ARM64/x86_64 architecture mismatches
+  ```bash
+  podman build --platform linux/amd64 -t myapp:latest -f Containerfile . --no-cache
+  ```
+- **Build Strategy**: Prefer using OpenShift BuildConfig over building and pushing containers locally where possible
 
 ## Python Development
 - ALWAYS use venv for local development
@@ -82,6 +87,7 @@ project-root/
 - FastAPI > Flask for new projects
 - Docling for document processing
 - vLLM-compatible embeddings only
+- Use `--platform linux/amd64` when building containers on Mac for OpenShift
 
 ## Creating Directories
 - If you are creating directories for a project structure, create a shell script to do the directory creation and then run the script.

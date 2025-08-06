@@ -10,6 +10,11 @@ This document defines the standard development practices, architecture decisions
 - Use `podman-compose.yml` for local orchestration
 - Target deployment: Red Hat OpenShift with OpenShift AI features
 - **Base Images**: Always use Red Hat UBI base images (`registry.redhat.io/ubi9/*`)
+- **Platform Architecture**: When building on Mac for OpenShift deployment, always specify `--platform linux/amd64` to avoid ARM64/x86_64 architecture mismatches
+  ```bash
+  podman build --platform linux/amd64 -t myapp:latest -f Containerfile . --no-cache
+  ```
+- **Build Strategy**: Prefer using OpenShift BuildConfig over building and pushing containers locally where possible
 
 ### Security & Compliance
 - FIPS compliance may be required - **always ask if unclear**
@@ -203,6 +208,7 @@ Before starting any project:
 - [ ] Ensure embedding models are vLLM-compatible
 - [ ] Use streamable-http for MCP servers (SSE is deprecated)
 - [ ] Create directory structure with shell script
+- [ ] Use `--platform linux/amd64` when building containers on Mac for OpenShift
 
 ## Code Generation Guidelines
 
