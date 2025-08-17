@@ -22,9 +22,15 @@
   "architecture_principles": {
     "coupling": "Prefer loose coupling via APIs",
     "ai_capabilities": "Use MCP servers for AI capabilities",
-    "real_time": "streamable-http for MCP (SSE is deprecated), standard HTTP for REST APIs",
+    "real_time": {
+      "mcp": "streamable-http (SSE is deprecated)",
+      "rest_apis": "SSE for real-time updates, standard HTTP otherwise"
+    },
     "protocols": "Avoid gRPC unless specifically requested",
-    "optimization": "No early optimization - get basic functionality working first"
+    "optimization": "No early optimization - get basic functionality working first",
+    "architecture_file": "If ARCHITECTURE.md exists in root, refer to it and don't stray without discussion",
+    "file_versioning": "Avoid creating multiple versions of same file - edit in place",
+    "breaking_changes": "Ask if backward compatibility is needed before introducing breaking changes"
   },
   
   "mcp_transport_protocols": {
@@ -67,7 +73,10 @@
     "debugging": "Let broken things stay visibly broken",
     "mocking": "Only mock when explicitly requested",
     "architecture_vs_functionality": "Focus on working code over perfect architecture",
-    "error_messages": "Create explicit error messages that help debugging"
+    "error_messages": "Create explicit error messages that help debugging",
+    "file_size": "Aim for no more than 512 lines per code file to decrease context saturation",
+    "file_organization": "If >512 lines needed, consider breaking functions into importable utilities",
+    "git_operations": "Never perform git add or git commit operations - handled manually by user"
   },
   
   "project_structure": {
@@ -147,6 +156,13 @@
     "Use streamable-http for MCP servers (SSE is deprecated)",
     "Use --platform linux/amd64 when building containers on Mac for OpenShift"
   ],
+  
+  "communication_style": {
+    "interaction": "Direct responses preferred - answer questions without assuming disagreement",
+    "explanations": "When asked for explanations, provide them within overall application context",
+    "disagreement": "If you disagree with an approach, be plain and direct",
+    "questions": "Questions often seek understanding, not disagreement"
+  },
   
   "claude_instructions": {
     "preference_priority": "Always reference these preferences when providing code examples, architecture suggestions, or project setup guidance",

@@ -1,6 +1,45 @@
 # Global Cursor Rules - Project Defaults
 # Be sure to read each of these and customize them to your use case.
 
+## Code Generation Guidelines
+
+### When providing code examples:
+- Always reference these preferences for technology choices
+- Search for current versions rather than using potentially outdated information
+- Ask about FIPS requirements and security constraints for enterprise environments
+- Prioritize Red Hat ecosystem solutions and OpenShift-native approaches
+- Focus on working solutions that follow these standards rather than theoretical perfection
+- For MCP server distribution, recommend the multi-layered approach with Python packages, containers, and OpenShift manifests
+
+### Error Handling Approach
+- Never hide errors or mock functionality to work around problems
+- Make failures obvious and debuggable
+- Provide clear error messages that help developers understand what went wrong
+- Only use mocking when explicitly requested by the developer
+
+## Architecture
+- If there is an ARCHITECTURE.md file in the root, refer to that when writing new code and do not stray from it without discussion.
+- Do not create multiple versions of the same file as we iterate. Try to just edit a file in place. If you are introducing a breaking change, ask the user if we need to preserve the old way and if so, develop in a backward compatible way.
+- If no backward compatibility is needed, then you can just replace existing functionality.
+
+## Agreeableness
+- While I appreciate polite responses, please do not assume that if I am asking a question that implies I don't agree with the approach.
+- Sometimes I want to better understand something, so I will ask you to explain it to me.
+- If I ask a question, just answer the question with consideration for the overall context of our application.
+- If I don't agree with an approach, I will be plain and direct about that.
+
+## File size
+- Aim for no more than 512 lines in each code file. This helps to decrease context saturation.
+- If more than 512 lines are needed, consider breaking some functions into importable utilities.
+- Do not simply truncate a file. If it gets a little more than 512 lines and there is nothing to break out, then continue.
+
+## Git
+- Never perform `git add` or `git commit` operations - these are handled manually by the user
+
+## Creating Directories
+- If you are creating directories for a project structure, create a shell script to do the directory creation and then run the script.
+
+
 ## Environment & Platform
 - Use Podman, NOT Docker
 - Use `Containerfile`, NOT `Dockerfile`
@@ -35,8 +74,6 @@
   - Local SLMs for sensitive data
   - OpenShift AI Models for enterprise
   - Public Cloud Hosted only for non-sensitive tasks and with explicit approval
-
-## AI/ML Development
 - KubeFlow pipelines for data flows and model development
 - OpenShift AI workbenches for experimentation
 
@@ -69,15 +106,119 @@ project-root/
 │   ├── base/
 │   └── overlays/
 ├── src/
+├── prompts/                    # YAML-based prompt management
 ├── mcp-servers/
 ├── agents/
 └── tests/
 ```
 
+## Testing Standards
+
+### Python Testing
+- Framework: pytest for all Python testing
+- Coverage: Aim for 80%+ code coverage minimum
+- Test Structure: Mirror source code structure in `tests/` directory
+- Error Paths: Explicitly test error conditions and edge cases
+- Fixtures: Use pytest fixtures for reusable test setup
+- Mocking: Mock external dependencies, not to hide errors
+
+### Testing Practices
+- Write tests before or alongside code (TDD/BDD when appropriate)
+- Test both happy paths and failure scenarios
+- Include integration tests for API endpoints
+- Use descriptive test names that explain what is being tested
+- Run tests locally before committing
+- Include test commands in project documentation
+
+### Test Execution
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=src --cov-report=html
+
+# Run specific test file
+pytest tests/test_specific.py
+
+# Run tests matching pattern
+pytest -k "test_authentication"
+```
+
+## Prompt Management Standards
+
+### Format & Organization
+- Format: YAML files for easy editing and developer briefing
+- Directory: `prompts/` (peer with `src/`)
+- Variable substitution: Use `{variable_name}` format in templates
+- Response schemas: Maintain separate JSON schema files when structured output is needed
+- Rationale: Keep prompts easily editable rather than baking into MCP servers
+- Developer onboarding: YAML format makes it easy to brief other developers on prompt functionality
+
+### YAML Structure Requirements
+```yaml
+name: "Human-readable prompt name"
+description: "Purpose and context of the prompt"
+template: |
+  Prompt text with {variable_name} substitution
+
+# Optional fields:
+parameters:
+  - temperature: 0.0
+  - max_tokens: 2000
+
+variables:
+  - name: "variable_name"
+    type: "string"
+    description: "Variable description"
+    required: true
+```
+
+## MCP Server Publishing Strategy
+
+When creating reusable MCP servers, use this multi-layered approach:
+
+### 1. Python Package Distribution
+- Use `pyproject.toml` with proper entry points for CLI tools
+- Publish to internal PyPI for easy pip install across teams
+- Provide template repositories for teams to clone and customize
+
+### 2. Container Strategy
+- Red Hat UBI for all container builds
+- Use multi-stage builds for production optimization
+- Push to OpenShift internal registry or enterprise container registry
+
+### 3. OpenShift Deployment
+- Provide base manifests with Kustomize overlays for different environments
+- Structure for ArgoCD deployment
+- Include ServiceMonitor for OpenShift monitoring stack
+
+### 4. Developer Experience
+- Provide command-line tools for easy server creation and management
+- Include examples, API docs, and deployment guides
+- Scripts to generate new MCP server projects with prompts
+
+## MCP Server Development
+- Default to STDIO transport for local development
+- Use HTTP (streamable-http) transport for production deployments
+- Structure prompts in YAML files within `prompts/` directory
+- Implement proper variable substitution and validation
+- Include reload capabilities for prompt management
+
 ## Deployment
 - GitOps with ArgoCD when appropriate
 - OpenShift Pipelines (Tekton) for CI/CD
 - Use OpenShift built-in monitoring
+
+## Enterprise Integration Notes
+- Always consider security and compliance requirements
+- Assume enterprise environment unless told otherwise
+- Ask about existing infrastructure and integration points
+- Consider scalability and monitoring from the start
+- Plan for team collaboration and knowledge sharing
+- Ensure all solutions work within Red Hat OpenShift ecosystem
+- Design for multi-team usage and shared services where appropriate
+- Add to memory: "When making changes to a file, do not create a new version of that file unless instructed. Proliferation of various versions of files leads to grand confusion."
 
 ## Quick Reminders
 - Check if FIPS is needed before starting
@@ -88,9 +229,3 @@ project-root/
 - Docling for document processing
 - vLLM-compatible embeddings only
 - Use `--platform linux/amd64` when building containers on Mac for OpenShift
-
-## Creating Directories
-- If you are creating directories for a project structure, create a shell script to do the directory creation and then run the script.
-
-## Git
-- Never perform `git add` or `git commit` operations - these are handled manually by the user

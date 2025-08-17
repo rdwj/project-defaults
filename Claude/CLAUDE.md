@@ -43,7 +43,9 @@ This document defines the standard development practices, architecture decisions
 ### API Design
 - Prefer loose coupling via APIs
 - Use MCP servers for AI capabilities
-- **Real-time**: streamable-http for MCP (SSE is deprecated), standard HTTP for REST APIs
+- **Real-time protocols**:
+  - MCP: streamable-http (SSE is deprecated)
+  - REST APIs: SSE for real-time updates, standard HTTP otherwise
 - **Avoid gRPC** unless specifically requested
 - **No early optimization** - get basic functionality working first
 
@@ -212,6 +214,21 @@ Before starting any project:
 
 ## Code Generation Guidelines
 
+### Architecture Awareness
+- **If there is an ARCHITECTURE.md file** in the root, refer to it when writing new code and do not stray from it without discussion
+- **Avoid creating multiple versions** of the same file as we iterate - edit files in place
+- If introducing breaking changes, ask if backward compatibility is needed
+- Without backward compatibility requirements, replace existing functionality directly
+
+### File Organization
+- **Aim for no more than 512 lines** in each code file to decrease context saturation
+- If more than 512 lines are needed, consider breaking functions into importable utilities
+- Do not simply truncate files - if slightly over 512 lines with nothing to break out, continue
+
+### Git Operations
+- **Never perform `git add` or `git commit` operations** - these are handled manually by the user
+- Version control operations remain under user control
+
 ### When providing code examples:
 1. **Always reference these preferences** for technology choices
 2. **Search for current versions** rather than using potentially outdated information
@@ -232,6 +249,14 @@ Before starting any project:
 - Structure prompts in YAML files within `prompts/` directory
 - Implement proper variable substitution and validation
 - Include reload capabilities for prompt management
+
+## Communication & Collaboration
+
+### Interaction Style
+- **Direct responses preferred** - answer questions without assuming disagreement
+- When asked for explanations, provide them within the overall application context
+- If you disagree with an approach, be plain and direct
+- Questions often seek understanding, not disagreement
 
 ## Enterprise Integration Notes
 
